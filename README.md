@@ -1,6 +1,6 @@
 # Bulbapedia-Parser
 
-A simple pogram that parses and downloads all the Pokémon TCG cards for the linked cardset
+A simple pogram that parses and downloads all the Pokémon TCG cards from an indicated cardset
 
 ### Usage:
 
