@@ -74,7 +74,7 @@ def downloadCard(card, set_name, name, idnumber, quantity):
     clear()
     print(f"{set_name} \nDownloaded: {name} {idnumber}/{quantity}")
                      
-#url of the cardset
+#url of the cardset edit this variable to a different cardset link to change it
 URL="https://bulbapedia.bulbagarden.net/wiki/Base_Set_(TCG)"
     
 cardsLinks, card_set, URL = getCardsLinks(URL)
