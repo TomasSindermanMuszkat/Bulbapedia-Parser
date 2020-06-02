@@ -1,4 +1,4 @@
-#imports
+# imports
 from urllib import error
 from urllib.parse import unquote, quote
 from urllib.request import urlopen, Request, urlretrieve
@@ -8,7 +8,7 @@ from os import system, path
 from time import sleep
 from platform import system as sys
 
-#gets all cards from the card list in the cardset wiki in bulbapedia
+# gets all cards from the card list in the cardset wiki in bulbapedia
 def getCardsLinks(url):
     req = Request(url, headers={"User-Agent" : "Magic Browser"})
     html = urlopen(req) 
@@ -34,7 +34,7 @@ def getCardsLinks(url):
     
     return cards, cardSet, url
 
-#gets the image link from the specfic card pic wiki in bulbapedia
+# gets the image link from the specfic card pic wiki in bulbapedia
 def getImageUrl(cardUrl, cardName, cardSet ,cardsetcaps):
     req = Request(cardUrl, headers={"User-Agent" : "Magic Browser"})
     html = urlopen(req)
@@ -54,14 +54,14 @@ def getImageUrl(cardUrl, cardName, cardSet ,cardsetcaps):
                 break
     return card
 
-#clears the screen for stetic purposes (works in linux and windows)
+# clears the screen for stetic purposes (works in linux and windows)
 def clear():
     if "windows" in sys().lower():
         system("cls")
     else:
         system("clear")  
 
-#downloads and names the card with a nice format inside of a previously made folder with the name of the cardset in the same directory of this script
+# downloads and names the card with a nice format inside of a previously made folder with the name of the cardset in the same directory of this script
 def downloadCard(card, set_name, name, idnumber, quantity):
     name=unquote(name)
     if "png" in card:
@@ -74,34 +74,34 @@ def downloadCard(card, set_name, name, idnumber, quantity):
     clear()
     print(f"{set_name} \nDownloaded: {name} {idnumber}/{quantity}")
                      
-#url of the cardset edit this variable to a different cardset link to change it
+# url of the cardset edit this variable to a different cardset link to change it
 URL="https://bulbapedia.bulbagarden.net/wiki/Base_Set_(TCG)"
     
 cardsLinks, card_set, URL = getCardsLinks(URL)
 
-#url base to generate the images links according to bulbapedias format
+# url base to generate the images links according to bulbapedias format
 URLbase= URL + "/wiki/File:"
 
-#gets the 1st word of the cardset
+# gets the 1st word of the cardset
 cardSetFirstWord= card_set.split("_")[0]
 
-#removes underscores from the crad set name
+# removes underscores from the crad set name
 card_set = card_set.replace("_", "")
 
-#gets the amount of cards in the cardset
+# gets the amount of cards in the cardset
 cardsAmount=len(cardsLinks)
 
-#id number that will be used to determine the number of the card as "Alakazam 1/102"
+# id number that will be used to determine the number of the card as "Alakazam 1/102"
 idn=0
 
-#cardset name but only its initials
+# cardset name but only its initials
 cardSetCaps = "".join([char for char in card_set if char.isupper()])
 
-#makes a folder named as the cardset in the same directory of this script
+# makes a folder named as the cardset in the same directory of this script
 system(f"mkdir {card_set}")
 
-#uses all the previous stuff explained before to scrape all the card links using all the formats within the bulbapedia links (known to me)
-#which includes finding scraping naming and downloading every HTTP error means the card doesnt use that format so it tests the next format
+# uses all the previous stuff explained before to scrape all the card links using all the formats within the bulbapedia links (known to me)
+# which includes finding scraping naming and downloading every HTTP error means the card doesnt use that format so it tests the next format
 for card in cardsLinks:
     URLbase = URLbase.replace("archives", "bulbapedia")
     idn+=1
@@ -196,5 +196,5 @@ for card in cardsLinks:
                                             card = [name, idn, err]
                                             print(card)
  
-#sleeps 3 seconds for having enough display time to read the log of the final card in the cardset
+# sleeps 3 seconds for having enough display time to read the log of the final card in the cardset
 sleep(3)
