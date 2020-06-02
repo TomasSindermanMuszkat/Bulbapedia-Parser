@@ -6,7 +6,7 @@ A simple pogram that parses and downloads all the Pokémon TCG cards from an ind
 
 **1. Download all the files from this repo**
 
-**2. Go with the terminal or the command line to teh directory where you have the files and write:**
+**2. Go with the terminal or the command line to the directory where you have the files and write:**
 
     > pip install -r requirements.txt
     
@@ -14,7 +14,7 @@ A simple pogram that parses and downloads all the Pokémon TCG cards from an ind
 
     > URL="https://bulbapedia.bulbagarden.net/wiki/Base_Set_(TCG)"
 
-**4. Execute the script and enjoy your pokemon Cards**
+**4. Execute the script and enjoy your Pokémon Cards**
 
 
 ### Disclaimer: 
