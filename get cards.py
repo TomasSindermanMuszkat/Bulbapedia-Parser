@@ -18,6 +18,8 @@ def getCardsLinks(url):
     cardSet = url.split("/")[-1]
     url = url.replace("/wiki/" + cardSet, "")
     cardSet= cardSet.replace("_(TCG)", "")
+    startpoint=None
+    count=0
     
     for hyperlink in bsObj.find_all('a'):
         link = (hyperlink.get('href'))
@@ -26,10 +28,18 @@ def getCardsLinks(url):
                 if "http" not in link:
                     link = url + link
                 cards.append(link)
+                #print(link)
                 
     for link in cards:
         if link[-2]=="1" and link[-3]=="_":
+            count+=1
+            if startpoint==None:
+                startpoint=cards.count(link)
+                for i in range(startpoint-1):
+                    cards.remove(link)
+                continue
             cards=cards[cards.index(link)::]
+            #for i in cards: print(i)
             break
     
     return cards, cardSet, url
@@ -75,7 +85,7 @@ def downloadCard(card, set_name, name, idnumber, quantity):
     print(f"{set_name} \nDownloaded: {name} {idnumber}/{quantity}")
                      
 # url of the cardset edit this variable to a different cardset link to change it
-URL="https://bulbapedia.bulbagarden.net/wiki/Base_Set_(TCG)"
+URL="https://bulbapedia.bulbagarden.net/wiki/Jungle_(TCG)"
     
 cardsLinks, card_set, URL = getCardsLinks(URL)
 
@@ -100,6 +110,8 @@ cardSetCaps = "".join([char for char in card_set if char.isupper()])
 # makes a folder named as the cardset in the same directory of this script
 system(f"mkdir {card_set}")
 
+oldNames=[]
+
 # uses all the previous stuff explained before to scrape all the card links using all the formats within the bulbapedia links (known to me)
 # which includes finding scraping naming and downloading every HTTP error means the card doesnt use that format so it tests the next format
 for card in cardsLinks:
@@ -111,7 +123,9 @@ for card in cardsLinks:
     if card_set=="BaseSet" and "Farfetch" in name:
         name = unquote(name)
         name =  name.replace("'", "")
-    if card_set=="BaseSet" and "Nidoran" in name:
+    if name=="Mr.Mime":
+        name="MrMime"
+    if "Nidoran" in name:
         name = "Nidoran"
     if card_set=="BaseSet" and name=="GustofWind":
         name = "GustOfWind"
@@ -119,6 +133,7 @@ for card in cardsLinks:
     try:
         card = getImageUrl(URL, name, card_set, cardSetCaps)
         downloadCard(card, card_set, name, str(idn), cardsAmount)
+        oldNames.append(name)
     except KeyboardInterrupt:
         break
     except error.HTTPError:
@@ -126,6 +141,7 @@ for card in cardsLinks:
             URL=URLbase+cardSetCaps+str(idn)+name+".jpg"
             card = getImageUrl(URL, name, card_set, cardSetCaps)
             downloadCard(card, card_set, name, str(idn), cardsAmount)
+            oldNames.append(name)
         except error.HTTPError:
             try:
                 originalName=name
@@ -143,27 +159,32 @@ for card in cardsLinks:
                 URL=URLbase+name+"_"+cardSetFirstWord+"_"+str(idn)+".jpg"
                 card = getImageUrl(URL, name, card_set, cardSetCaps)
                 downloadCard(card, card_set, name, str(idn), cardsAmount)
+                oldNames.append(name)
             except error.HTTPError:
                 try:
                     name=originalName
                     URL=URLbase+card_set+str(idn)+name+".jpg"
                     card = getImageUrl(URL, name, card_set, cardSetCaps)
                     downloadCard(card, card_set, name, str(idn), cardsAmount)
+                    oldNames.append(name)
                 except error.HTTPError:
                     try:
                         URL=URLbase+name+".jpg"
                         card = getImageUrl(URL, name, card_set, cardSetCaps)
                         downloadCard(card, card_set, name, str(idn), cardsAmount)
+                        oldNames.append(name)
                     except error.HTTPError:
                         try:
                             URL=URLbase+name+card_set+str(idn)+".png"
                             card = getImageUrl(URL, name, card_set, cardSetCaps)
                             downloadCard(card, card_set, name, str(idn), cardsAmount)
+                            oldNames.append(name)
                         except error.HTTPError:
                             try:
                                 URL=URLbase+cardSetCaps+str(idn)+name+".png"
                                 card = getImageUrl(URL, name, card_set, cardSetCaps)
                                 downloadCard(card, card_set, name, str(idn), cardsAmount)
+                                oldNames.append(name)
                             except error.HTTPError:
                                 try:
                                     originalName=name
@@ -181,17 +202,20 @@ for card in cardsLinks:
                                     URL=URLbase+name+"_"+cardSetFirstWord+"_"+str(idn)+".jpg"
                                     card = getImageUrl(URL, name, card_set, cardSetCaps)
                                     downloadCard(card, card_set, name, str(idn), cardsAmount)
+                                    oldNames.append(name)
                                 except error.HTTPError:
                                     try:
                                         name=originalName
                                         URL=URLbase+card_set+str(idn)+name+".png"
                                         card = getImageUrl(URL, name, card_set, cardSetCaps)
                                         downloadCard(card, card_set, name, str(idn), cardsAmount)
+                                        oldNames.append(name)
                                     except error.HTTPError:
                                         try:
                                             URL=URLbase+name+".png"
                                             card = getImageUrl(URL, name, card_set, cardSetCaps)
                                             downloadCard(card, card_set, name, str(idn), cardsAmount)
+                                            oldNames.append(name)
                                         except error.HTTPError as err:
                                             card = [name, idn, err]
                                             print(card)
